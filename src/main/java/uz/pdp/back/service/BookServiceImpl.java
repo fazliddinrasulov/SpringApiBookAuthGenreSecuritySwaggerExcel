@@ -10,11 +10,10 @@ import uz.pdp.back.entity.Attachment;
 import uz.pdp.back.entity.Author;
 import uz.pdp.back.entity.Book;
 import uz.pdp.back.entity.Genre;
-import uz.pdp.back.model.projection.BookForExcelProjection;
 import uz.pdp.back.model.dto.AddBookDto;
+import uz.pdp.back.model.projection.BookForExcelProjection;
 import uz.pdp.back.repo.BookRepository;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.UUID;
@@ -78,13 +77,13 @@ public class BookServiceImpl implements BookService {
 
     @SneakyThrows
     @Override
-    public ByteArrayInputStream exportBookToExcel() {
+    public byte[] exportBookToExcel() {
         try (
                 Workbook workbook = new XSSFWorkbook();
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
         ) {
             List<BookForExcelProjection> books = bookRepository.findAllBookAsExcel();
-            //name of excel
+            //name of sheet (page) of excel file
             Sheet sheet = workbook.createSheet("Books");
             Row headerRow = sheet.createRow(0);
 
@@ -121,7 +120,8 @@ public class BookServiceImpl implements BookService {
             }
             // Write workbook to output stream
             workbook.write(out);
-            return new ByteArrayInputStream(out.toByteArray());
+
+            return out.toByteArray();
         }
     }
 

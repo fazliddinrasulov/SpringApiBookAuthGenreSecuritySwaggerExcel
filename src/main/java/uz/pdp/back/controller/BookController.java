@@ -2,7 +2,6 @@ package uz.pdp.back.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,7 +14,6 @@ import uz.pdp.back.model.dto.AddBookDto;
 import uz.pdp.back.service.AttachmentService;
 import uz.pdp.back.service.BookService;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -77,13 +75,13 @@ public class BookController {
     @GetMapping("/export")
     public ResponseEntity<?> exportBooksToExcel() throws IOException {
         HttpHeaders headers = new HttpHeaders();
-        ByteArrayInputStream inputStream = bookService.exportBookToExcel();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.add("Content-Disposition", "attachment; filename=data.xlsx");
+        byte[] bytes = bookService.exportBookToExcel();
         return ResponseEntity
                 .ok()
                 .headers(headers)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(new InputStreamResource(inputStream));
+                .body(bytes);
     }
 
     @PostMapping("/import")

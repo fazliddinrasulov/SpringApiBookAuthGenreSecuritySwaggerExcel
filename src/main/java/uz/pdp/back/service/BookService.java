@@ -5,7 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.back.entity.Book;
 import uz.pdp.back.model.dto.AddBookDto;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public interface BookService {
 
     void deleteBook(UUID id);
 
-    ByteArrayInputStream exportBookToExcel();
+    byte[] exportBookToExcel();
 
     void importExcelToDb(MultipartFile file);
 }
