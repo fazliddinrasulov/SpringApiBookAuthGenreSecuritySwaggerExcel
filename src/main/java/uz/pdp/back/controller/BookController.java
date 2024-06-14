@@ -1,6 +1,5 @@
 package uz.pdp.back.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -64,12 +63,12 @@ public class BookController {
 
 
     @GetMapping("/attachment/{bookId}")
-    public void getBookFileByAttachmentId(@PathVariable UUID bookId, HttpServletResponse resp) throws IOException {
+    public HttpEntity<?> getBookFileByAttachmentId(@PathVariable UUID bookId) throws IOException {
         Attachment attachment = attachmentService.findByBookId(bookId);
         byte[] photo = attachment.getData();
-        resp.setContentType("image/png");
-        resp.getOutputStream().write(photo);
-        resp.getOutputStream().flush();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        return  ResponseEntity.ok().headers(headers).body(photo);
     }
 
     @GetMapping("/export")
